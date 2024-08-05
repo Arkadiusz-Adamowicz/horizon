@@ -17,10 +17,11 @@ import { signIn, signUp } from '@/lib/actions/user.actions';
 import PlaidLink from './PlaidLink';
 
 const AuthForm = ({ type }: { type: string }) => {
+  const router = useRouter();
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+
   const formSchema = authFormSchema(type);
-  const router = useRouter();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -34,8 +35,10 @@ const AuthForm = ({ type }: { type: string }) => {
   // 2. Define a submit handler.
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
+
     try {
       // Sign up with Appwrite & create plaid token
+
       if (type === 'sign-up') {
         const userData = {
           firstName: data.firstName!,
@@ -49,15 +52,18 @@ const AuthForm = ({ type }: { type: string }) => {
           email: data.email,
           password: data.password,
         };
+
         const newUser = await signUp(userData);
 
         setUser(newUser);
       }
+
       if (type === 'sign-in') {
         const response = await signIn({
           email: data.email,
           password: data.password,
         });
+
         if (response) router.push('/');
       }
     } catch (error) {
@@ -65,8 +71,6 @@ const AuthForm = ({ type }: { type: string }) => {
     } finally {
       setIsLoading(false);
     }
-    console.log(data);
-    setIsLoading(false);
   };
 
   return (
@@ -136,13 +140,13 @@ const AuthForm = ({ type }: { type: string }) => {
                       control={form.control}
                       name='state'
                       label='State'
-                      placeholder='ex. PL'
+                      placeholder='Example: NY'
                     />
                     <CustomInput
                       control={form.control}
                       name='postalCode'
                       label='Postal Code'
-                      placeholder='ex. 54-320'
+                      placeholder='Example: 11101'
                     />
                   </div>
                   <div className='flex gap-4'>
@@ -156,7 +160,7 @@ const AuthForm = ({ type }: { type: string }) => {
                       control={form.control}
                       name='ssn'
                       label='SSN'
-                      placeholder='ex. 123456789'
+                      placeholder='Example: 1234'
                     />
                   </div>
                 </>
