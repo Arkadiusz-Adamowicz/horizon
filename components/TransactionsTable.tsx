@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/table';
 import {
   formatAmount,
+  formatDateTime,
   getTransactionStatus,
   removeSpecialCharacters,
 } from '@/lib/utils';
@@ -45,6 +46,10 @@ const TransactionsTable = ({ transactions }: TransactionTableProps) => {
                 {isDebit ? `-${amount}` : isCredit ? amount : amount}
               </TableCell>
               <TableCell>{status}</TableCell>
+              <TableCell>{formatDateTime(new Date(t.date)).dateTime}</TableCell>
+
+              <TableCell>{t.paymentChannel}</TableCell>
+              <TableCell>{t.category} </TableCell>
             </TableRow>
           );
         })}
