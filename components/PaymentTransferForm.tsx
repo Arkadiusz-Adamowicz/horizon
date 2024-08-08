@@ -6,13 +6,14 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-
 import { createTransfer } from '@/lib/actions/dwolla.actions';
-// import { createTransaction } from '@/lib/actions/transaction.actions';
 import { getBank, getBankByAccountId } from '@/lib/actions/user.actions';
 import { decryptId } from '@/lib/utils';
-
 import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Textarea } from './ui/textarea';
+import { BankDropdown } from './BankDropdown';
+import { createTransaction } from '@/lib/actions/transaction.actions';
 import {
   Form,
   FormControl,
@@ -22,9 +23,6 @@ import {
   FormLabel,
   FormMessage,
 } from './ui/form';
-import { Input } from './ui/input';
-import { Textarea } from './ui/textarea';
-import { BankDropdown } from './BankDropdown';
 
 const formSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -79,12 +77,12 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
           email: data.email,
         };
 
-        // const newTransaction = await createTransaction(transaction);
+        const newTransaction = await createTransaction(transaction);
 
-        // if (newTransaction) {
-        //   form.reset();
-        //   router.push('/');
-        // }
+        if (newTransaction) {
+          form.reset();
+          router.push('/');
+        }
       }
     } catch (error) {
       console.error('Submitting create transfer request failed: ', error);
@@ -181,7 +179,7 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage className='text-12 text-red-500' />
+                  <FormMessage className='text-12 text-yellow-500' />
                 </div>
               </div>
             </FormItem>
